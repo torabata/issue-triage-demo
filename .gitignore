@@ -1,0 +1,52 @@
+# Secrets — never commit
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local DB / logs
+*.db
+*.sqlite
+*.sqlite3
+logs/
+*.log
+
+# OS
+.DS_Store
+
+# Editors
+.vscode/
+.idea/
+
+# ============== Evaluator-specific (do not commit) ==============
+# Devin org-level resource IDs are environment-specific.
+# Evaluators should run scripts/create_playbooks.py and scripts/create_knowledge.py
+# to generate their own.
+playbook_ids.json
+knowledge_ids.json
+
+# ============== Internal working files (do not commit) ==============
+# Loom recording materials and personal notes
+loom-script.md
+loom-script-jp.md
+slide-deck.md
+pretest-checklist.md
+
+# Old polling-version state (no longer used)
+state.json
+
+# Initial smoke tests (replaced by the integration test suite)
+scratch/
+
+# ============== Cleanup notes ==============
+# When pushing to the Solution repo, these files are excluded.
+# The repo only contains the production-ready code, tests, and submission docs.
