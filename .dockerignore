@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+
+# Editors
+.vscode/
+.idea/
+
+# Internal working files (not for the Docker image)
+loom-script.md
+loom-script-jp.md
+slide-deck.md
+pretest-checklist.md
+README-submission.md
+README-internal.md
+state.json
+scratch/
+
+# Devin org-specific (regenerated per environment)
+playbook_ids.json
+knowledge_ids.json
+
+# Don't include the prepared submission directory or the ZIP
+issue-triage-demo/
+issue-triage-demo.zip
+
+# Git
+.git/
+.gitignore
+.gitattributes
