@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Devin Issue Triage Agent — FinServ Co</title>
+  <style>
+    /* ============== Base / Reset ============== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Helvetica Neue", Arial, sans-serif;
+      color: #1a1a1a;
+      background: #ffffff;
+    }
+
+    /* ============== Slide Container ============== */
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      padding: 8vh 10vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease;
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* ============== Typography ============== */
+    .title {
+      font-size: 4.5vw;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5vh;
+      color: #0a0a0a;
+    }
+
+    .subtitle {
+      font-size: 1.6vw;
+      font-weight: 400;
+      color: #666;
+      margin-bottom: 5vh;
+      letter-spacing: -0.01em;
+    }
+
+    .body-list {
+      list-style: none;
+      margin-bottom: 5vh;
+    }
+
+    .body-list li {
+      font-size: 1.8vw;
+      font-weight: 400;
+      line-height: 1.5;
+      margin-bottom: 1.5vh;
+      padding-left: 0;
+      color: #333;
+    }
+
+    .body-list li strong {
+      font-weight: 600;
+      color: #0a0a0a;
+    }
+
+    .callout {
+      margin-top: auto;
+      padding: 3vh 4vw;
+      background: #f5f7fb;
+      border-left: 0.4vw solid #2563eb;
+      border-radius: 0.6vw;
+      font-size: 2vw;
+      font-weight: 500;
+      line-height: 1.4;
+      color: #0a0a0a;
+    }
+
+    .callout strong {
+      font-weight: 700;
+      color: #2563eb;
+    }
+
+    /* ============== Slide 2: Pills ============== */
+    .pills-container {
+      display: flex;
+      gap: 2vw;
+      justify-content: center;
+      align-items: stretch;
+      margin: 5vh 0;
+    }
+
+    .pill {
+      flex: 1;
+      max-width: 22vw;
+      padding: 4vh 2vw;
+      border-radius: 1.2vw;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0.4vw 1.6vw rgba(0, 0, 0, 0.08);
+    }
+
+    .pill-green {
+      background: #dcfce7;
+      border: 0.2vw solid #22c55e;
+    }
+
+    .pill-yellow {
+      background: #fef9c3;
+      border: 0.2vw solid #eab308;
+    }
+
+    .pill-red {
+      background: #fee2e2;
+      border: 0.2vw solid #ef4444;
+    }
+
+    .pill-name {
+      font-size: 2vw;
+      font-weight: 700;
+      font-family: "SF Mono", "Menlo", "Monaco", monospace;
+      margin-bottom: 1.5vh;
+      letter-spacing: -0.01em;
+    }
+
+    .pill-green .pill-name { color: #15803d; }
+    .pill-yellow .pill-name { color: #a16207; }
+    .pill-red .pill-name { color: #b91c1c; }
+
+    .pill-desc {
+      font-size: 1.3vw;
+      font-weight: 400;
+      line-height: 1.4;
+      color: #444;
+    }
+
+    /* ============== Slide 3: Architecture Diagram ============== */
+    .arch-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5vh;
+      margin: 3vh 0;
+    }
+
+    .arch-box {
+      padding: 1.8vh 3vw;
+      border: 0.2vw solid #2563eb;
+      border-radius: 0.8vw;
+      background: #f5f7fb;
+      font-size: 1.5vw;
+      font-weight: 600;
+      text-align: center;
+      min-width: 22vw;
+      color: #0a0a0a;
+    }
+
+    .arch-box.devin {
+      padding: 2.5vh 3vw;
+      min-width: 30vw;
+    }
+
+    .arch-box.devin .arch-devin-title {
+      font-size: 1.7vw;
+      margin-bottom: 1vh;
+    }
+
+    .arch-box.devin .arch-devin-list {
+      font-size: 1.1vw;
+      font-weight: 400;
+      color: #444;
+      list-style: none;
+      text-align: left;
+      display: inline-block;
+    }
+
+    .arch-box.devin .arch-devin-list li {
+      padding-left: 1vw;
+      position: relative;
+      line-height: 1.6;
+    }
+
+    .arch-box.devin .arch-devin-list li::before {
+      content: "—";
+      position: absolute;
+      left: 0;
+      color: #2563eb;
+    }
+
+    .arch-arrow {
+      font-size: 2vw;
+      color: #2563eb;
+      font-weight: 300;
+    }
+
+    .arch-row {
+      display: flex;
+      gap: 4vw;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .arch-row .arch-box {
+      min-width: 12vw;
+    }
+
+    /* ============== Navigation ============== */
+    .nav-hint {
+      position: fixed;
+      bottom: 2vh;
+      right: 2vw;
+      font-size: 0.9vw;
+      color: #aaa;
+      font-weight: 400;
+    }
+
+    .slide-counter {
+      position: fixed;
+      bottom: 2vh;
+      left: 2vw;
+      font-size: 0.9vw;
+      color: #aaa;
+      font-weight: 400;
+    }
+
+    /* ============== Print / Fullscreen ============== */
+    @media (min-aspect-ratio: 16/10) {
+      .title { font-size: 4vw; }
+      .subtitle { font-size: 1.4vw; }
+      .body-list li { font-size: 1.6vw; }
+      .callout { font-size: 1.8vw; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===================== Slide 1 ===================== -->
+  <section class="slide active" id="slide-1">
+    <h1 class="title">It's not about the number of issues.<br>It's about a stuck process.</h1>
+    <p class="subtitle">How we automatically improve the flow of issue resolution.</p>
+
+    <ul class="body-list">
+      <li><strong>300+ issues</strong> of many different types are piling up</li>
+      <li><strong>Senior engineers</strong> are heads-down on platform work</li>
+      <li><strong>Junior engineers</strong> spend more time understanding issues than fixing them</li>
+    </ul>
+
+    <div class="callout">
+      The volume isn't the problem.<br>
+      <strong>The stuck process is.</strong>
+    </div>
+  </section>
+
+  <!-- ===================== Slide 2 ===================== -->
+  <section class="slide" id="slide-2">
+    <h1 class="title">Not an assistant.<br>An agent that judges and executes.</h1>
+    <p class="subtitle">Devin returns one of three outcomes for every issue.</p>
+
+    <div class="pills-container">
+      <div class="pill pill-green">
+        <div class="pill-name">pr_opened</div>
+        <div class="pill-desc">Safe and easy to fix<br>→ opens PR</div>
+      </div>
+      <div class="pill pill-yellow">
+        <div class="pill-name">skipped_unsafe</div>
+        <div class="pill-desc">Sensitive area<br>→ escalates to a human</div>
+      </div>
+      <div class="pill pill-red">
+        <div class="pill-name">aborted_too_complex</div>
+        <div class="pill-desc">Too complex<br>→ needs design judgment</div>
+      </div>
+    </div>
+
+    <div class="callout">
+      Devin doesn't just process everything.<br>
+      <strong>It judges and routes each issue.</strong>
+    </div>
+  </section>
+
+  <!-- ===================== Slide 3 ===================== -->
+  <section class="slide" id="slide-3">
+    <h1 class="title">Devin acts autonomously,<br>end to end.</h1>
+    <p class="subtitle">GitHub → Devin → PR → Dashboard. No human intervention until review.</p>
+
+    <div class="arch-container">
+      <div class="arch-box">GitHub Issue + label</div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-box">GitHub Actions (orchestrator)</div>
+      <div class="arch-arrow">↓ Devin API</div>
+      <div class="arch-box devin">
+        <div class="arch-devin-title">Devin Session</div>
+        <ul class="arch-devin-list">
+          <li>Playbook</li>
+          <li>Knowledge Notes (×3)</li>
+          <li>Snapshot</li>
+        </ul>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-row">
+        <div class="arch-box">Pull Request</div>
+        <div class="arch-box">Dashboard</div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>No human intervention</strong> from issue to PR.<br>
+      Configuration can evolve — the system grows with you.
+    </div>
+  </section>
+
+  <!-- ===================== Navigation ===================== -->
+  <div class="slide-counter"><span id="current-slide">1</span> / 3</div>
+  <div class="nav-hint">← → arrows | F = fullscreen</div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const counter = document.getElementById('current-slide');
+    let currentIndex = 0;
+
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('active', i === index);
+      });
+      counter.textContent = index + 1;
+    }
+
+    function next() {
+      if (currentIndex < slides.length - 1) {
+        currentIndex++;
+        showSlide(currentIndex);
+      }
+    }
+
+    function prev() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        showSlide(currentIndex);
+      }
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault();
+        next();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        prev();
+      } else if (e.key === 'f' || e.key === 'F') {
+        toggleFullscreen();
+      } else if (e.key === 'Home' || e.key === '1') {
+        currentIndex = 0;
+        showSlide(0);
+      } else if (e.key === 'End' || e.key === '3') {
+        currentIndex = slides.length - 1;
+        showSlide(currentIndex);
+      } else if (e.key === '2') {
+        currentIndex = 1;
+        showSlide(1);
+      }
+    });
+
+    document.addEventListener('click', () => {
+      next();
+    });
+  </script>
+</body>
+</html>
