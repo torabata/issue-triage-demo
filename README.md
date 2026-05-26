@@ -1,8 +1,7 @@
 # Devin Issue Triage Agent
 
-> **Cognition Take-home submission** — autonomously triages and resolves GitHub issues using the Devin v3 API.
+> **autonomously triages and resolves GitHub issues using the Devin v3 API.
 >
-> **Loom recording**: [link to be added]
 >
 > Built for "FinServ Co" — issues piling up in different types, senior engineers focused on platform work, juniors slowed by triage. This system gets the stuck process moving — automatically.
 
