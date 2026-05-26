@@ -254,4 +254,4 @@ The architecture is built for evolution: update the Playbook, every future sessi
 
 ## Author
 
-[Tatsuya Nakamura](https://www.linkedin.com/in/tatsuya-nakamura-a31198186/) — submitted as part of the Cognition Deployed Engineering interview process.
+[Tatsuya Nakamura](https://www.linkedin.com/in/tatsuya-nakamura-a31198186/).
